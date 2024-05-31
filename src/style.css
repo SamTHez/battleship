@@ -130,6 +130,17 @@ body {
 .setup-btn {
     display: block;
     padding: 1rem 2.5rem;
+    border: 6px solid #5c626e;
+    border-radius: 0.5rem;
+    background-color: #afb8c9;
+}
+
+.setup-btn:hover {
+    opacity: 0.9;
+}
+
+.setup-btn:active {
+    scale: 0.95;
 }
 
 #ship-container {
@@ -139,6 +150,7 @@ body {
     margin: 2rem 0;
     padding: 0.5rem;
     border-radius: 0.5rem;
+    position: relative;
 
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -153,10 +165,113 @@ body {
     border: 4px solid black;
 }
 
+.ship-used {
+    opacity: 0.7;
+}
+
+.square-used {
+    background-color: #3560bd;
+}
+
 .placement-valid {
     background-color: #18a81a;
 }
 
 .placement-invalid {
+    background-color: #c90808;
+}
+
+#play-btn {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 1rem 4rem;
+    width: 70%;
+    border: 6px solid #5c626e;
+    border-radius: 0.5rem;
+    background-color: #afb8c9;
+    font-size: 2rem;
+    z-index: 100;
+}
+
+/*************************************************
+*****           Game Page                   *****
+*************************************************/
+
+#nextBtn {
+    display: block;
+    margin: 2rem auto 0;
+    padding: 1rem 4rem;
+    border: 6px solid #5c626e;
+    border-radius: 0.5rem;
+    background-color: #afb8c9;
+    font-size: 1.6rem;
+}
+
+#nextBtn:hover {
+    opacity: 0.9;
+}
+
+#nextBtn:active {
+    scale: 0.95;
+}
+
+#boards-display {
+    display: grid;
+    height: 30rem;
+    width: fit-content;
+    grid-template-columns: 20rem 40rem 20rem;
+    grid-template-rows: 2rem auto;
+    gap: 2rem;
+    margin: 1rem auto 4rem;
+}
+
+.board-label {
+    font-size: 1.6rem;
+    text-align: center;
+}
+
+.side-board {
+    background-color: #5c626e;
+    height: 20rem;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    opacity: 0.7;
+
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    gap: 1px;
+}
+
+#active-board {
+    background-color: #5c626e;
+    grid-row-start: span 2;
+    height: 40rem;
+    
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    gap: 2px;
+
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+}
+
+.square-selected {
+    background-color: #1c9677;
+}
+
+.ship-square {
+    background-color: #3560bd;
+}
+
+.empty-shot {
+    background-color: #df9f9f;
+}
+
+.ship-shot {
     background-color: #c90808;
 }
