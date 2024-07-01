@@ -1,7 +1,7 @@
 const Boards = (() => {
     const BOARD_SIZE = 10;
 
-    let playerBoard, cpuBoard;
+    let playerBoard, cpuAnswerBoard, cpuDisplayBoard;
     let setupDir = "x";
 
     function getRandomInt(max) {
@@ -9,13 +9,13 @@ const Boards = (() => {
       }      
 
     const getPlayerBoard = () => {return(playerBoard)};
-    const initPlayerBoard = () => {playerBoard = newBoard() };
+    const initPlayerBoard = () => {playerBoard = newBoard()};
     const resetPlayerBoard = () => {
         playerBoard = [];
         playerBoard = newBoard();
     }
-
-    const getCpuBoard = () => {return(cpuBoard)};
+    const getAnswerBoard = () => {return(cpuAnswerBoard)};
+    const getDisplayBoard = () => {return(cpuDisplayBoard)};
 
     const getSelectedSize = () => {
         let selectedShip = document.getElementsByClassName("ship-selected")[0];
@@ -59,6 +59,7 @@ const Boards = (() => {
 
         return({
             board: boardState,
+            //Board Key: -1:error, 0:empty, 1:ship, 2:shotMiss, 3:shotHit
             getSquare: function(x,y) {
                 if(x>=BOARD_SIZE||y>=BOARD_SIZE) {
                     return(-1);
@@ -110,12 +111,28 @@ const Boards = (() => {
                 } else {
                     console.log("Error placing ship: INVALID PLACEMENT");
                 }
+            },
+            checkForWin: function() {
+                let hitCount = 0;
+                for(let x=0; x<BOARD_SIZE; x++) {
+                    for(let y=0; y<BOARD_SIZE; y++) {
+                        if(this.getSquare(x,y) === 3) {
+                            hitCount += 1;
+                        }
+                    }
+                }
+                if(hitCount === 17) {
+                    return(true);
+                } else {
+                    return(false);
+                }
             }
         })
     }
 
-    const generateCpuBoard = () => {
-        cpuBoard = newBoard();
+    const generateCpuBoards = () => {
+        cpuAnswerBoard = newBoard();
+        cpuDisplayBoard = newBoard();
         let shipSizes = [2,3,3,4,5];
         for(let i=0; i<shipSizes.length; i++) {
             let dirNum = getRandomInt(2);
@@ -128,20 +145,18 @@ const Boards = (() => {
             let possibleLocations = [];
             for(let x=0; x<BOARD_SIZE; x++) {
                 for(let y=0; y<BOARD_SIZE; y++) {
-                    if(cpuBoard.checkShip(shipSizes[i], shipDir, x, y)) {
+                    if(cpuAnswerBoard.checkShip(shipSizes[i], shipDir, x, y)) {
                         possibleLocations.push([x,y]);
                     }
                 }
             }
             let numLocations = possibleLocations.length;
             let newLocation = possibleLocations[getRandomInt(numLocations)];
-            cpuBoard.placeShip(shipSizes[i], shipDir, newLocation[0], newLocation[1]);
+            cpuAnswerBoard.placeShip(shipSizes[i], shipDir, newLocation[0], newLocation[1]);
         }
     }
 
-
-
-    return{ newBoard, getPlayerBoard, resetPlayerBoard, getCpuBoard, getSelectedSize, toggleSetupDir, getSetupDir, generateCpuBoard, initPlayerBoard };
+    return{ newBoard, getPlayerBoard, resetPlayerBoard, getAnswerBoard, getDisplayBoard, getSelectedSize, toggleSetupDir, getSetupDir, generateCpuBoards, initPlayerBoard };
 })()
 
 export default Boards;

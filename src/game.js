@@ -3,6 +3,12 @@ import Boards from './boards';
 
 const Game = (() => {
     const content = document.getElementById("content");
+    let gameMsg = "";
+
+    const setNewMsg = (text) => {
+        gameMsg = text;
+    }
+
     const gameStates = {
         START: {
             name: 'start',
@@ -18,39 +24,42 @@ const Game = (() => {
         SETUP: {
             name: 'setup',
             onEnter: () => {
-                console.log(`Entering State setup`);
+                console.log(`Entering State: setup`);
                 Pages.loadSetupPage(content);
                 Boards.initPlayerBoard();
             },
             onExit: () => {
                 console.log(`Exiting State: setup`);
                 Pages.unloadPage(content);
-                Boards.generateCpuBoard();
-                Pages.loadGamePage(content);
+                setNewMsg("Your Turn: Shoot Your Shot");
+                Boards.generateCpuBoards(); 
             }
         },
         PLAYER_TURN: {
             name: 'player_turn',
             onEnter: () => {
                 console.log(`Entering State: player`);
-                //Show CPU Board
-                //addEventListeners
+                Pages.loadGamePage(content, gameMsg);
+                Pages.displayCpuBoard();
+                Pages.setupSquareSelect();
             },
             onExit: () => {
                 console.log(`Exiting State: player`);
-                //Hide CPU Board
-                //removeEventListeners
+                Pages.clearActiveBoard();
+                Pages.unloadPage(content);
             }
         },
         CPU_TURN: {
             name: 'cpu_turn',
             onEnter: () => {
                 console.log(`Entering State: cpu`);
-                //Show Player Board
+                Pages.loadGamePage(content, gameMsg);
+                Pages.displayPlayerBoard();
             },
             onExit: () => {
                 console.log(`Exiting State: cpu`);
-                //Hide Player Board
+                Pages.clearActiveBoard();
+                Pages.unloadPage(content);
             }
         },
         GAME_END: {
@@ -58,7 +67,6 @@ const Game = (() => {
             onEnter: () => {
                 console.log(`Entering State: end`);
                 Pages.unloadPage(content);
-                //load End Page
             },
             onExit: () => {
                 console.log(`Exiting State: end`);
@@ -114,7 +122,11 @@ const Game = (() => {
         }
     }
 
-    return{ changeState };
+    const getState = () => {
+        return(curState);
+    }
+
+    return{ setNewMsg, changeState, getState };
 })();
 
 export default Game;

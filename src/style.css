@@ -63,15 +63,21 @@ body {
 *****           Main Sctructure              *****
 *************************************************/
 
+@font-face {
+    font-family: "Chalktastic";
+    src: url('/src/assets/Chalktastic-x1nR.ttf');
+}
+
 #content {
     height: 100vh;
     width: 100vw;
 
     padding: 3rem;
 
-    background-color: #3560bd;
-    font-family: Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
+    background-color: #31343a;
+    font-family: "Chalktastic", Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
     font-weight: normal;
+    color: #ffffff;
 }
 
 /*************************************************
@@ -100,7 +106,6 @@ body {
 }
 
 .game-board {
-    background-color: #5c626e;
     height: 36rem;
     width: 36rem;
     margin: 2rem auto;
@@ -108,14 +113,15 @@ body {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(10, 1fr);
-    gap: 2px;
+    gap: 0px;
 
-    padding: 0.5rem;
+
     border-radius: 0.5rem;
+    border: 2px solid #ffffff;
 }
 
 .board-square {
-    background-color: #afb8c9;
+    border: 1px dotted #ffffff;
 }
 
 #setup-container {
@@ -224,7 +230,6 @@ body {
     width: fit-content;
     grid-template-columns: 20rem 40rem 20rem;
     grid-template-rows: 2rem auto;
-    gap: 2rem;
     margin: 1rem auto 4rem;
 }
 
@@ -243,7 +248,6 @@ body {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(10, 1fr);
-    gap: 1px;
 }
 
 #active-board {
@@ -265,13 +269,13 @@ body {
 }
 
 .ship-square {
-    background-color: #3560bd;
+    background-color: #f8e21a;
 }
 
-.empty-shot {
+.miss-shot {
     background-color: #df9f9f;
 }
 
-.ship-shot {
+.hit-shot {
     background-color: #c90808;
 }

@@ -3,31 +3,109 @@ import Game from "./game";
 import Boards from "./boards";
 
 const Pages = (() => {
+    function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
+      }      
+
     const unloadPage = (root) => {
         root.innerHTML = "";
     }
 
-    const setupPlayerTurn = () => {
-        const cpuBoard = Boards.getCpuBoard();
+    const generateSquareID = (number) => {
+        const xNum = number%10;
+        const yNum = (number-xNum)/10;
+        const squareID = `box-${xNum}-${yNum}`;
+        return(squareID);
+    }
+
+    const startPlayerTurn = (targetX, targetY) => {
+        const answerBoard = Boards.getAnswerBoard();
+        const displayBoard = Boards.getDisplayBoard();
+        switch(answerBoard.getSquare(targetX, targetY)) {
+            case(1):
+                displayBoard.setSquare(targetX, targetY, 3);
+                return(true);
+            case(0):
+                displayBoard.setSquare(targetX, targetY, 2);
+                return(false);
+            default:
+                console.log("Player Turn Error");
+        }
+        
+    }
+
+    const startCpuTurn = () => {
+        const playerBoard = Boards.getPlayerBoard();
+        let targetX = getRandomInt(10);
+        let targetY = getRandomInt(10);
+        let targetShot = playerBoard.getSquare(targetX, targetY);
+        while(targetShot !== 0 && targetShot !== 1) {
+            targetX = (targetX + 1)%10;
+            targetY = (targetY + 1)%10;
+            targetShot = playerBoard.getSquare(targetX, targetY);
+        }
+        switch(targetShot) {
+            case(1):
+                playerBoard.setSquare(targetX, targetY, 3)
+                return(true);
+            case(0):
+                playerBoard.setSquare(targetX, targetY, 2)
+                return(false);
+            default:
+                console.log("CPU Turn Error");
+        }
+
+    }
+
+    const setupSquareSelect = () => {
         const activeSquares = document.querySelectorAll("#active-board .board-square");
         for(let i=0;i<activeSquares.length;i++) {
             const curSquare = activeSquares[i];
-            curSquare.addEventListener("click", () => {
-                let selectedSquares = document.getElementsByClassName("square-selected");
-                console.log(selectedSquares);
-                while(selectedSquares[0]) {
-                    selectedSquares[0].classList.remove("square-selected");                   
-                }
-                curSquare.classList.add("square-selected");
-            })
-            
+            if(!(curSquare.classList.contains("miss-shot")||curSquare.classList.contains('hit-shot'))) {
+                curSquare.addEventListener("click", () => {
+                    let selectedSquares = document.getElementsByClassName("square-selected");
+                    while(selectedSquares[0]) {
+                        selectedSquares[0].classList.remove("square-selected");                   
+                    }
+                    curSquare.classList.add("square-selected");
+                })
+            }
         }
     }
 
-    const loadGameBoard = (root, board) => {
-        const emptyBoard = Boards.newBoard();
-        board = board || emptyBoard;
+    const displayCpuBoard = (root) => {
+        const activeBoard = document.getElementById("active-board");
+        root = root || activeBoard;
+        const displayBoard = Boards.getDisplayBoard();
+        for(let i=0; i<100; i++) {
+            const boardSquare = document.createElement("div");
+            boardSquare.classList.add("board-square");
+            boardSquare.id = generateSquareID(i);
+            let curX = toInteger(boardSquare.id.split("-")[1]);
+            let curY = toInteger(boardSquare.id.split("-")[2]);
+            switch(displayBoard.getSquare(curX, curY)) {
+                case 0:
+                    break;
+                case 1:
+                    boardSquare.classList.add("ship-square");
+                    break;
+                case 2:
+                    boardSquare.classList.add("miss-shot");
+                    break;
+                case 3:
+                    boardSquare.classList.add("hit-shot");
+                    break;
+                default:
+                    console.log("Error in DisplayBoard");
+            }
+            root.appendChild(boardSquare);
+        }
+    }
 
+    const displayPlayerBoard = (root) => {
+        const board = Boards.getPlayerBoard();
+        const activeBoard = document.getElementById("active-board");
+        root = root || activeBoard;
         for(let i=0; i<100; i++) {
             const boardSquare = document.createElement("div");
             boardSquare.classList.add("board-square");
@@ -41,25 +119,91 @@ const Pages = (() => {
                     boardSquare.classList.add("ship-square");
                     break;
                 case 2:
-                    boardSquare.classList.add("empty-shot");
+                    boardSquare.classList.add("miss-shot");
+                    break;
+                case 3:
+                    boardSquare.classList.add("hit-shot");
                     break;
                 default:
-                    boardSquare.classList.add("ship-shot");
+                    console.log("Error in PlayerBoard");
             }
 
             root.appendChild(boardSquare);
         }
     }
 
-    const loadGamePage = (root) => {
+    const clearActiveBoard = () => {
+        const activeBoard = document.getElementById("active-board");
+        activeBoard.innerHTML = "";
+    }
+
+    const loadEndPage = (root, playerWin) => {
+        const endText = document.createElement("h1");
+        endText.innerText = (playerWin) ? "You Won! Play Again?" : "You Lost! Play Again?";
+        root.appendChild(endText);
+
+        const endBtn = document.createElement("button");
+        endBtn.innerText = "Back to Home";
+        endBtn.addEventListener("click", () => {
+            Game.changeState("ResetGame");
+        })
+        root.appendChild(endBtn);
+    }
+
+    const loadGamePage = (root, gameMsg) => {
         const gameText = document.createElement("h1");
         gameText.classList.add("game-text");
-        gameText.innerText = "Your Turn - Shoot Your Shot";
+        gameText.innerText = gameMsg;
         root.appendChild(gameText);
 
         const nextBtn = document.createElement("button");
         nextBtn.id = "nextBtn";
         nextBtn.textContent = "Continue";
+        nextBtn.addEventListener("click",() => {
+            switch(Game.getState()) {
+                case "player_turn":
+                    const selectedSquare = document.querySelector("#active-board .square-selected");
+                    if(selectedSquare) {
+                        let selectedX = toInteger(selectedSquare.id.split("-")[1]);
+                        let selectedY = toInteger(selectedSquare.id.split("-")[2]);
+                        let result = startPlayerTurn(selectedX, selectedY);
+                        if(result) {
+                            console.log(Boards.getDisplayBoard())
+                            if(Boards.getDisplayBoard().checkForWin()) {
+                                Game.changeState("GameEnd");
+                            } else {
+                                unloadPage(root);
+                                loadGamePage(root, "You Hit A Ship! Shoot Again");
+                                displayCpuBoard();
+                                setupSquareSelect();
+                            }
+                        } else {
+                            Game.setNewMsg("You Missed! CPU Turn To Shoot");
+                            Game.changeState("PlayerMiss");
+                        }
+                    }
+                    break;
+                case "cpu_turn":
+                    let result = startCpuTurn();
+                    if(result) {
+                        if(Boards.getPlayerBoard().checkForWin()) {
+                            Game.changeState("GameEnd");
+                        } else {
+                            unloadPage(root);
+                            loadGamePage(root, "CPU Hit! CPU Will Shoot Again");
+                            displayPlayerBoard();
+                        }
+                    } else {
+                        Game.setNewMsg("CPU Missed! Your Turn To Shoot");
+                        Game.changeState("CpuMiss");
+                    }
+                    break;
+                default:
+                    console.log("Error in NextBtn")
+
+            }
+            
+        })
         root.appendChild(nextBtn);
 
         const boardsDisplay = document.createElement("div");
@@ -75,35 +219,22 @@ const Pages = (() => {
         activeBoard.id = "active-board";
         boardsDisplay.appendChild(activeBoard);
 
-        let playerBoard = Boards.getPlayerBoard();
-        loadGameBoard(activeBoard);
-        setupPlayerTurn();
-
         const cpuBoardLabel = document.createElement("h3");
         cpuBoardLabel.innerText = "CPU Board";
         cpuBoardLabel.classList.add("board-label");
         boardsDisplay.appendChild(cpuBoardLabel);
-
+    
         const playerBoardSide = document.createElement("div");
         playerBoardSide.classList.add("side-board");
         boardsDisplay.appendChild(playerBoardSide);
-        loadGameBoard(playerBoardSide, playerBoard);
+        displayPlayerBoard(playerBoardSide);
 
         const cpuBoardSide = document.createElement("div");
         cpuBoardSide.classList.add("side-board");
         boardsDisplay.appendChild(cpuBoardSide);
 
-        Boards.generateCpuBoard();
-        let cpuBoard = Boards.getCpuBoard();
-        loadGameBoard(cpuBoardSide);
-
-    }
-
-    const generateSquareID = (number) => {
-        const xNum = number%10;
-        const yNum = (number-xNum)/10;
-        const squareID = `box-${xNum}-${yNum}`;
-        return(squareID);
+        displayCpuBoard(cpuBoardSide);
+        console.log(Boards.getAnswerBoard());
     }
 
     const loadSetupBoard = (root) => {
@@ -307,7 +438,7 @@ const Pages = (() => {
         root.appendChild(startButton);
     }
 
-    return{ unloadPage, loadStartPage, loadSetupPage, loadGamePage };
+    return{ unloadPage, loadStartPage, loadSetupPage, loadGamePage, loadEndPage, displayCpuBoard, displayPlayerBoard, setupSquareSelect, clearActiveBoard, startPlayerTurn, startCpuTurn };
 })()
 
 export default Pages;
