@@ -91,10 +91,29 @@ body {
 }
 
 #start-btn {
+    background: none;
     display: block;
     margin: 5rem auto 0;
-    padding: 0.5rem 3rem;
+    padding: 1rem 3rem;
     font-size: 3rem;
+    font-family: "Chalktastic", Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
+    color: #ffffff;
+}
+
+.chalk-border {
+    border-image-source: url('./assets/chalkBorder.png');
+    border-image-slice: 32 29 31 34;
+    border-image-width: 20px;
+    border-image-repeat: repeat;
+    padding: 1.2rem;
+}
+
+#start-btn:hover {
+    scale: 1.05;
+}
+
+#start-btn:active {
+    scale: 0.95;
 }
 
 /*************************************************
@@ -105,101 +124,175 @@ body {
     font-size: 4rem;
 }
 
+#setup-content {
+    display: grid;
+    grid-template-columns: 2fr minmax(0, 2fr);
+    justify-items: center;
+    margin: 0 auto;
+    padding: 2rem 0;
+}
+
+#setup-menu {
+    justify-self: start;
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr ;
+    grid-template-columns: minmax(0, 100%);
+    padding: 2rem 0 5rem;
+}
+
+.ship-row {
+    display: flex;
+    height: 10rem;
+}
+
+.two-ship {
+    flex: 2;
+}
+
+.three-ship {
+    flex: 3;
+}
+
+.four-ship {
+    flex: 4;
+}
+
+.five-ship {
+    flex: 5;
+}
+
+#setup-btns {
+    display: flex;
+    padding: 2rem 0;
+}
+
+#setup-btns button {
+    background: none;
+}
+
+.setup-btn {
+    flex: 1;
+    aspect-ratio: 1/1;
+    scale: .8;
+}
+
+.setup-btn:hover {
+    scale: .85;
+}
+
+.setup-btn:active {
+    scale: .75;
+    opacity: .9;
+}
+
+.setup-icon {
+    max-height: 5rem;
+}
+
+#play-btn {
+    flex: 6;
+    margin: 0 2rem;
+    font-size: 3rem;
+    font-family: "Chalktastic", Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
+    color: #ffffff;
+}
+
+#play-btn:hover:enabled {
+    scale: 1.05;
+}
+
+#play-btn:active:enabled {
+    scale: 0.95;
+    opacity: 0.9
+}
+
+button:disabled{
+    opacity: 0.3;
+}
+
 .game-board {
-    height: 36rem;
-    width: 36rem;
-    margin: 2rem auto;
+    justify-self: end;
+    height: 40rem;
+    width: 40rem;
+    margin: 2rem 5rem;
+    padding: 1rem;
 
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(10, 1fr);
     gap: 0px;
-
-
-    border-radius: 0.5rem;
-    border: 2px solid #ffffff;
 }
 
 .board-square {
-    border: 1px dotted #ffffff;
-}
-
-#setup-container {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    margin: 0 auto;
-    width: 60%;
-    height: 8rem;
-}
-
-.setup-btn {
-    display: block;
-    padding: 1rem 2.5rem;
-    border: 6px solid #5c626e;
-    border-radius: 0.5rem;
-    background-color: #afb8c9;
-}
-
-.setup-btn:hover {
-    opacity: 0.9;
-}
-
-.setup-btn:active {
-    scale: 0.95;
-}
-
-#ship-container {
-    background-color: #5c626e;
-    height: 8rem;
-    width: 36rem;
-    margin: 2rem 0;
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    position: relative;
-
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    column-gap: 2px;
+    border: 1px solid #ffffff33;
 }
 
 .ship-box {
-    background-color: #afb8c9;
+    margin: 1rem;
+    padding: 2rem;
+    width: 20rem;
+    text-align: center;
+    opacity: .8;
+}
+
+.ship-box:hover:not(.ship-selected) {
+    scale: 1.05;
+}
+
+.ship-icon-box {
+    display: flex;
+    justify-content: space-evenly;
+    height: 100%;
+}
+
+@keyframes wiggle {
+    0% {
+        rotate: 0deg;
+    }
+    25% {
+        rotate: 10deg;
+    }
+    50% {
+        rotate: -20deg;
+    }
+    75% {
+        rotate: 10deg;
+    }
+    100% {
+        rotate: 0deg;
+    }
+}
+
+.ship-icon {
+    flex: 1;
 }
 
 .ship-selected {
-    border: 4px solid black;
+    scale: 1.10;
+    opacity: 1;
+}
+
+.ship-selected .ship-icon-box .ship-icon {
+    animation: wiggle 1s ease-in infinite;
 }
 
 .ship-used {
-    opacity: 0.7;
+    opacity: 0.3;
 }
 
 .square-used {
-    background-color: #3560bd;
+    background-image: url(/src/assets/shipIcon.png);
+    background-size: cover;
 }
 
 .placement-valid {
-    background-color: #18a81a;
+    background-image: url(/src/assets/validPlacement.png);
+    background-size: cover;
 }
 
 .placement-invalid {
-    background-color: #c90808;
-}
-
-#play-btn {
-    display: none;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 1rem 4rem;
-    width: 70%;
-    border: 6px solid #5c626e;
-    border-radius: 0.5rem;
-    background-color: #afb8c9;
-    font-size: 2rem;
-    z-index: 100;
+    background-image: url(/src/assets/invalidPlacement.png);
+    background-size: cover;
 }
 
 /*************************************************
@@ -209,11 +302,11 @@ body {
 #nextBtn {
     display: block;
     margin: 2rem auto 0;
-    padding: 1rem 4rem;
-    border: 6px solid #5c626e;
-    border-radius: 0.5rem;
-    background-color: #afb8c9;
-    font-size: 1.6rem;
+    padding: 2rem 4rem;
+    background: none;
+    font-size: 1.4rem;
+    font-family: "Chalktastic", Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
+    color: #ffffff;
 }
 
 #nextBtn:hover {
@@ -230,6 +323,7 @@ body {
     width: fit-content;
     grid-template-columns: 20rem 40rem 20rem;
     grid-template-rows: 2rem auto;
+    column-gap: 1rem;
     margin: 1rem auto 4rem;
 }
 
@@ -239,10 +333,9 @@ body {
 }
 
 .side-board {
-    background-color: #5c626e;
     height: 20rem;
     border-radius: 0.5rem;
-    padding: 0.5rem;
+    padding: 1rem;
     opacity: 0.7;
 
     display: grid;
@@ -251,31 +344,83 @@ body {
 }
 
 #active-board {
-    background-color: #5c626e;
     grid-row-start: span 2;
     height: 40rem;
     
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(10, 1fr);
-    gap: 2px;
 
-    padding: 0.5rem;
+    padding: 1rem;
     border-radius: 0.5rem;
 }
 
+@keyframes pulse {
+    0% {
+        background-size: 100%;
+    }
+    50% {
+        background-size: 85%;
+    }
+    100% {
+        background-size: 100%;
+    }
+}
+
 .square-selected {
-    background-color: #1c9677;
+    background-image: url(/src/assets/targetIcon.png);
+    background-size: cover;
+    animation: pulse 1s ease-in infinite;    
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .ship-square {
-    background-color: #f8e21a;
+    background-image: url(/src/assets/shipIcon.png);
+    background-size: cover;
+
 }
 
 .miss-shot {
-    background-color: #df9f9f;
+    background-image: url(/src/assets/missedIcon.png);
+    background-size: cover;
 }
 
 .hit-shot {
-    background-color: #c90808;
+    background-image: url(/src/assets/hitIcon.png);
+    background-size: cover;
+}
+
+/*************************************************
+*****           End Page                   *****
+*************************************************/
+
+#char-container {
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.char-portrait {
+    margin: 2rem;
+    max-height: 25rem;
+}
+
+#end-btn {
+    display: block;
+    margin: 1rem auto 0;
+    padding: 2rem 4rem;
+    background: none;
+    font-size: 1.8rem;
+    font-family: "Chalktastic", Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
+    color: #ffffff;
+}
+
+#end-btn:hover {
+    scale: 1.05;
+}
+
+#end-btn:active {
+    opacity: 0.95;
+    scale: 0.95;
 }

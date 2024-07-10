@@ -22,16 +22,16 @@ const Boards = (() => {
         if(!(selectedShip)) {
             return(false);
         }
-        if(selectedShip.classList.contains("2-ship")) {
+        if(selectedShip.classList.contains("two-ship")) {
             return(2);
         }
-        if(selectedShip.classList.contains("3-ship")) {
+        if(selectedShip.classList.contains("three-ship")) {
             return(3);
         }
-        if(selectedShip.classList.contains("4-ship")) {
+        if(selectedShip.classList.contains("four-ship")) {
             return(4);
         }
-        if(selectedShip.classList.contains("5-ship")) {
+        if(selectedShip.classList.contains("five-ship")) {
             return(5);
         }
         return(false);

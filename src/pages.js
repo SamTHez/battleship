@@ -1,11 +1,18 @@
 import { toInteger } from "lodash";
 import Game from "./game";
 import Boards from "./boards";
+import ShipIcon from "./assets/shipIcon.png";
+import RotateIcon from "./assets/rotateIcon.png";
+import ResetIcon from "./assets/resetIcon.png";
+import PlayerWin from "./assets/playerWin.png";
+import PlayerLoss from "./assets/playerLoss.png";
+import CpuWin from "./assets/cpuWin.png";
+import CpuLoss from "./assets/cpuLoss.png";
 
 const Pages = (() => {
     function getRandomInt(max) {
         return Math.floor(Math.random() * max);
-      }      
+    }      
 
     const unloadPage = (root) => {
         root.innerHTML = "";
@@ -139,10 +146,28 @@ const Pages = (() => {
 
     const loadEndPage = (root, playerWin) => {
         const endText = document.createElement("h1");
+        endText.classList.add("game-text");
         endText.innerText = (playerWin) ? "You Won! Play Again?" : "You Lost! Play Again?";
         root.appendChild(endText);
 
+        //Add 2 portraits side by side
+        const charContainer = document.createElement("div");
+        charContainer.id = "char-container";
+        root.appendChild(charContainer);
+
+        const playerPortrait = document.createElement("img");
+        playerPortrait.classList.add("char-portrait", "chalk-border");
+        playerPortrait.src = (playerWin) ? PlayerWin : PlayerLoss;
+        charContainer.appendChild(playerPortrait);
+
+        const cpuPortrait = document.createElement("img");
+        cpuPortrait.classList.add("char-portrait", "chalk-border");
+        cpuPortrait.src = (playerWin) ? CpuLoss : CpuWin;
+        charContainer.appendChild(cpuPortrait);
+
         const endBtn = document.createElement("button");
+        endBtn.classList.add("chalk-border");
+        endBtn.id = "end-btn";
         endBtn.innerText = "Back to Home";
         endBtn.addEventListener("click", () => {
             Game.changeState("ResetGame");
@@ -158,6 +183,7 @@ const Pages = (() => {
 
         const nextBtn = document.createElement("button");
         nextBtn.id = "nextBtn";
+        nextBtn.classList.add("chalk-border");
         nextBtn.textContent = "Continue";
         nextBtn.addEventListener("click",() => {
             switch(Game.getState()) {
@@ -217,6 +243,7 @@ const Pages = (() => {
 
         const activeBoard = document.createElement("div");
         activeBoard.id = "active-board";
+        activeBoard.classList.add("chalk-border");
         boardsDisplay.appendChild(activeBoard);
 
         const cpuBoardLabel = document.createElement("h3");
@@ -225,12 +252,12 @@ const Pages = (() => {
         boardsDisplay.appendChild(cpuBoardLabel);
     
         const playerBoardSide = document.createElement("div");
-        playerBoardSide.classList.add("side-board");
+        playerBoardSide.classList.add("side-board", "chalk-border");
         boardsDisplay.appendChild(playerBoardSide);
         displayPlayerBoard(playerBoardSide);
 
         const cpuBoardSide = document.createElement("div");
-        cpuBoardSide.classList.add("side-board");
+        cpuBoardSide.classList.add("side-board", "chalk-border");
         boardsDisplay.appendChild(cpuBoardSide);
 
         displayCpuBoard(cpuBoardSide);
@@ -314,14 +341,13 @@ const Pages = (() => {
                             const curSquare = document.getElementById(`box-${curX}-${curY+i}`);
                             curSquare.classList.add("square-used");
                         }
-                        
                     }
                     let placedShip = document.getElementsByClassName(`ship-selected`)[0];
                     placedShip.classList.add("ship-used");
                     placedShip.classList.remove("ship-selected");
                     let usedShips = document.getElementsByClassName("ship-used");
                     if(usedShips.length >= 5) {
-                        document.getElementById("play-btn").style.display = "block";
+                        document.getElementById("play-btn").disabled = false;
                     }
                 }
             })
@@ -330,44 +356,62 @@ const Pages = (() => {
     }
 
     const loadSetupPage = (root) => {
+        //Top Text
         const setupText = document.createElement("h2");
         setupText.classList.add("game-text");
         setupText.textContent = "Place Your Ships";
         root.appendChild(setupText);
 
+        //Main Setup Layout
+        const setupContent = document.createElement('div');
+        setupContent.id = "setup-content";
+        root.appendChild(setupContent);
+
+        //Left side of setup screen - setup board
         const playerBoard = document.createElement("div");
         playerBoard.classList.add("game-board");
-        root.appendChild(playerBoard);
+        playerBoard.classList.add("chalk-border");
+        setupContent.appendChild(playerBoard);
 
         loadSetupBoard(playerBoard);
 
-        const setupContainer = document.createElement("div");
-        setupContainer.id = "setup-container";
-        root.appendChild(setupContainer);
+        //Right Side of Setup Screen - Ship Selection and Controls
+        const setupMenu = document.createElement("div");
+        setupMenu.id = "setup-menu";
+        setupContent.appendChild(setupMenu);
+
+        //Ship Controls and Buttons
+        const setupBtns = document.createElement('div');
+        setupBtns.id = "setup-btns";
+        setupMenu.appendChild(setupBtns);
 
         const rotateBtn = document.createElement("button");
-        rotateBtn.classList.add("setup-btn");
-        rotateBtn.innerText = "Rotate";
+        rotateBtn.classList.add("setup-btn", "chalk-border");
+        const rotateIcon = document.createElement("img");
+        rotateIcon.classList.add("setup-icon");
+        rotateIcon.src = RotateIcon;
+        rotateBtn.appendChild(rotateIcon);
         rotateBtn.addEventListener("click", () => {
             Boards.toggleSetupDir();
         })
-        setupContainer.appendChild(rotateBtn);
-
-        const playerShips = document.createElement("div");
-        playerShips.id = "ship-container";
-        setupContainer.appendChild(playerShips);
+        setupBtns.appendChild(rotateBtn);
 
         const playBtn = document.createElement("button");
         playBtn.id = "play-btn";
+        playBtn.classList.add("chalk-border");
         playBtn.innerText = "Play Game";
+        playBtn.disabled = true;
         playBtn.addEventListener("click", () => {
             Game.changeState('MoveToGame');
         })
-        playerShips.appendChild(playBtn);
+        setupBtns.appendChild(playBtn);
 
         const resetBtn = document.createElement("button");
-        resetBtn.classList.add("setup-btn");
-        resetBtn.innerText = "Reset";
+        resetBtn.classList.add("setup-btn", "chalk-border");
+        const resetIcon = document.createElement("img");
+        resetIcon.classList.add("setup-icon");
+        resetIcon.src = ResetIcon;
+        resetBtn.appendChild(resetIcon);
         resetBtn.addEventListener("click", () => {
             Boards.resetPlayerBoard();
             const selectedShips = Array.from(document.getElementsByClassName("ship-used"));
@@ -379,13 +423,23 @@ const Pages = (() => {
                 selectedSquares[i].classList.remove("square-used");
             }
             const playBtn = document.getElementById("play-btn");
-            playBtn.style.display = "none"
+            playBtn.disabled = true;
         })
-        setupContainer.appendChild(resetBtn);
+        setupBtns.appendChild(resetBtn);
+
+        //Ship Selection Containers
+        const upperShipRow = document.createElement("div");
+        upperShipRow.classList.add("ship-row");
+        setupMenu.appendChild(upperShipRow);
+
+        const lowerShipRow = document.createElement("div");
+        lowerShipRow.classList.add("ship-row");
+        setupMenu.appendChild(lowerShipRow);
 
         for(let i=0; i<5; i++) {
             const shipBox = document.createElement("div");
             shipBox.classList.add("ship-box");
+            shipBox.classList.add("chalk-border");
             shipBox.addEventListener("click", () => {
                 if(!shipBox.classList.contains("ship-used")) {
                     const allShips = document.querySelectorAll(".ship-box");
@@ -397,29 +451,65 @@ const Pages = (() => {
                     shipBox.classList.add("ship-selected");
                 }
             })
+            let shipIconBox = document.createElement("div");
             switch(i) {
                 case 0:
-                    shipBox.classList.add("2-ship");
-                    shipBox.innerText = "2";
+                    shipBox.classList.add("two-ship");
+                    shipIconBox.classList.add("ship-icon-box");
+                    shipBox.appendChild(shipIconBox);
+                    for(let j=0;j<2;j++){
+                        const icon = document.createElement("img");
+                        icon.classList.add("ship-icon");
+                        icon.src = ShipIcon;
+                        shipIconBox.appendChild(icon);
+                    }
+                    upperShipRow.appendChild(shipBox);
                     break;
                 case 1:
                 case 2:
-                    shipBox.classList.add("3-ship");
-                    shipBox.innerText = "3";
+                    shipBox.classList.add("three-ship");
+                    shipIconBox = document.createElement("div");
+                    shipIconBox.classList.add("ship-icon-box");
+                    shipBox.appendChild(shipIconBox);
+                    for(let j=0;j<3;j++){
+                        const icon = document.createElement("img");
+                        icon.classList.add("ship-icon");
+                        icon.src = ShipIcon;
+                        shipIconBox.appendChild(icon);
+                    }
+                    upperShipRow.appendChild(shipBox);
                     break;
                 case 3:
-                    shipBox.classList.add("4-ship");
-                    shipBox.innerText = "4";
+                    shipBox.classList.add("four-ship");
+                    shipIconBox = document.createElement("div");
+                    shipIconBox.classList.add("ship-icon-box");
+                    shipBox.appendChild(shipIconBox);
+                    for(let j=0;j<4;j++){
+                        const icon = document.createElement("img");
+                        icon.classList.add("ship-icon");
+                        icon.src = ShipIcon;
+                        shipIconBox.appendChild(icon);
+                    }
+                    lowerShipRow.appendChild(shipBox);
                     break;
                 case 4:
-                    shipBox.classList.add("5-ship");
-                    shipBox.innerText = "5";
+                    shipBox.classList.add("five-ship");
+                    shipIconBox = document.createElement("div");
+                    shipIconBox.classList.add("ship-icon-box");
+                    shipBox.appendChild(shipIconBox);
+                    for(let j=0;j<5;j++){
+                        const icon = document.createElement("img");
+                        icon.classList.add("ship-icon");
+                        icon.src = ShipIcon;
+                        shipIconBox.appendChild(icon);
+                    }
+                    lowerShipRow.appendChild(shipBox);
                     break;
                 default:
                     console.log("Error in switch statement");
             }
-            playerShips.appendChild(shipBox);
         }
+
 
     }
 
@@ -431,6 +521,7 @@ const Pages = (() => {
 
         const startButton = document.createElement("button");
         startButton.id = "start-btn";
+        startButton.classList.add("chalk-border");
         startButton.textContent = "Start Game";
         startButton.addEventListener("click", () => {
             Game.changeState('MoveToSetup');
