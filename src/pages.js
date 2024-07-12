@@ -1,6 +1,7 @@
 import { toInteger } from "lodash";
 import Game from "./game";
 import Boards from "./boards";
+import Cpu from './cpu';
 import ShipIcon from "./assets/shipIcon.png";
 import RotateIcon from "./assets/rotateIcon.png";
 import ResetIcon from "./assets/resetIcon.png";
@@ -10,10 +11,6 @@ import CpuWin from "./assets/cpuWin.png";
 import CpuLoss from "./assets/cpuLoss.png";
 
 const Pages = (() => {
-    function getRandomInt(max) {
-        return Math.floor(Math.random() * max);
-    }      
-
     const unloadPage = (root) => {
         root.innerHTML = "";
     }
@@ -39,29 +36,6 @@ const Pages = (() => {
                 console.log("Player Turn Error");
         }
         
-    }
-
-    const startCpuTurn = () => {
-        const playerBoard = Boards.getPlayerBoard();
-        let targetX = getRandomInt(10);
-        let targetY = getRandomInt(10);
-        let targetShot = playerBoard.getSquare(targetX, targetY);
-        while(targetShot !== 0 && targetShot !== 1) {
-            targetX = (targetX + 1)%10;
-            targetY = (targetY + 1)%10;
-            targetShot = playerBoard.getSquare(targetX, targetY);
-        }
-        switch(targetShot) {
-            case(1):
-                playerBoard.setSquare(targetX, targetY, 3)
-                return(true);
-            case(0):
-                playerBoard.setSquare(targetX, targetY, 2)
-                return(false);
-            default:
-                console.log("CPU Turn Error");
-        }
-
     }
 
     const setupSquareSelect = () => {
@@ -210,7 +184,7 @@ const Pages = (() => {
                     }
                     break;
                 case "cpu_turn":
-                    let result = startCpuTurn();
+                    let result = Cpu.takeTurn();
                     if(result) {
                         if(Boards.getPlayerBoard().checkForWin()) {
                             Game.changeState("GameEnd");
@@ -529,7 +503,7 @@ const Pages = (() => {
         root.appendChild(startButton);
     }
 
-    return{ unloadPage, loadStartPage, loadSetupPage, loadGamePage, loadEndPage, displayCpuBoard, displayPlayerBoard, setupSquareSelect, clearActiveBoard, startPlayerTurn, startCpuTurn };
+    return{ unloadPage, loadStartPage, loadSetupPage, loadGamePage, loadEndPage, displayCpuBoard, displayPlayerBoard, setupSquareSelect, clearActiveBoard, startPlayerTurn };
 })()
 
 export default Pages;

@@ -66,7 +66,7 @@ const Game = (() => {
             name: 'game_end',
             onEnter: () => {
                 console.log(`Entering State: end`);
-                Pages.loadEndPage(content, true); //Fix 2nd Argument to reflect who won
+                Pages.loadEndPage(content, false); //Fix 2nd Argument to reflect who won
             },
             onExit: () => {
                 console.log(`Exiting State: end`);
