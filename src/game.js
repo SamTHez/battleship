@@ -13,23 +13,19 @@ const Game = (() => {
         START: {
             name: 'start',
             onEnter: () => {
-                console.log(`Entering State: start`); 
                 Pages.loadStartPage(content);
             },
             onExit: () => {
-                console.log(`Exiting State: start`);
                 Pages.unloadPage(content);
             }
         },
         SETUP: {
             name: 'setup',
             onEnter: () => {
-                console.log(`Entering State: setup`);
                 Pages.loadSetupPage(content);
                 Boards.initPlayerBoard();
             },
             onExit: () => {
-                console.log(`Exiting State: setup`);
                 Pages.unloadPage(content);
                 setNewMsg("Your Turn: Shoot Your Shot");
                 Boards.generateCpuBoards(); 
@@ -38,13 +34,11 @@ const Game = (() => {
         PLAYER_TURN: {
             name: 'player_turn',
             onEnter: () => {
-                console.log(`Entering State: player`);
                 Pages.loadGamePage(content, gameMsg);
                 Pages.displayCpuBoard();
                 Pages.setupSquareSelect();
             },
             onExit: () => {
-                console.log(`Exiting State: player`);
                 Pages.clearActiveBoard();
                 Pages.unloadPage(content);
             }
@@ -52,12 +46,10 @@ const Game = (() => {
         CPU_TURN: {
             name: 'cpu_turn',
             onEnter: () => {
-                console.log(`Entering State: cpu`);
                 Pages.loadGamePage(content, gameMsg);
                 Pages.displayPlayerBoard();
             },
             onExit: () => {
-                console.log(`Exiting State: cpu`);
                 Pages.clearActiveBoard();
                 Pages.unloadPage(content);
             }
@@ -65,11 +57,9 @@ const Game = (() => {
         GAME_END: {
             name: 'game_end',
             onEnter: () => {
-                console.log(`Entering State: end`);
                 Pages.loadEndPage(content, false); //Fix 2nd Argument to reflect who won
             },
             onExit: () => {
-                console.log(`Exiting State: end`);
                 Pages.unloadPage(content);
             }
         }
