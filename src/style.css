@@ -51,8 +51,15 @@ table {
 	border-spacing: 0;
 }
 
+:root {
+    font-size: 62.5%;
+}
+
 body {
     box-sizing: border-box;
+    background-color: #31343a;
+    min-height: 100vh;
+    overflow: hidden;
 }
 
 *, *::before, *::after {
@@ -72,9 +79,9 @@ body {
     height: 100vh;
     width: 100vw;
 
-    padding: 3rem;
+    padding: 2%;
 
-    background-color: #31343a;
+
     font-family: "Chalktastic", Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
     font-weight: normal;
     color: #ffffff;
@@ -88,6 +95,7 @@ body {
     font-size: 5rem;
     text-align: center;
     padding-top: 16rem;
+    margin: 0 auto;
 }
 
 #start-btn {
@@ -130,14 +138,18 @@ body {
     justify-items: center;
     margin: 0 auto;
     padding: 2rem 0;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 0;
 }
 
 #setup-menu {
-    justify-self: start;
     display: grid;
-    grid-template-rows: 1fr 1fr 1fr ;
+    aspect-ratio: 1/1;
+    grid-auto-rows: 1fr;
     grid-template-columns: minmax(0, 100%);
-    padding: 2rem 0 5rem;
+    /* padding: 2% 0 5rem; */
+
 }
 
 .ship-row {
@@ -211,11 +223,10 @@ button:disabled{
 }
 
 .game-board {
-    justify-self: end;
-    height: 40rem;
-    width: 40rem;
-    margin: 2rem 5rem;
-    padding: 1rem;
+    width: 100%;
+    aspect-ratio: 1/1;
+    /* margin: 2rem 5rem;
+    padding: 1rem; */
 
     display: grid;
     grid-template-columns: repeat(10, 1fr);
