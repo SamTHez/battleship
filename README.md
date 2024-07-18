@@ -6,6 +6,5 @@ The font used is called Chalktastic and can be found below: (https://www.fontspa
 This webpage was developed entirely using HTML, CSS, and Javascript, with Webpack packaging the webpage for efficient deployment.
 
 ### Features to be added / known issues
-- Create a more advanced computer AI
 - Have computer turns automated without player intervention
 - Add Player Portraits to the Game screen

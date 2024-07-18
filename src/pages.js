@@ -168,7 +168,6 @@ const Pages = (() => {
                         let selectedY = toInteger(selectedSquare.id.split("-")[2]);
                         let result = startPlayerTurn(selectedX, selectedY);
                         if(result) {
-                            console.log(Boards.getDisplayBoard())
                             if(Boards.getDisplayBoard().checkForWin()) {
                                 Game.changeState("GameEnd");
                             } else {
@@ -235,7 +234,6 @@ const Pages = (() => {
         boardsDisplay.appendChild(cpuBoardSide);
 
         displayCpuBoard(cpuBoardSide);
-        console.log(Boards.getAnswerBoard());
     }
 
     const loadSetupBoard = (root) => {

@@ -10,8 +10,10 @@ const Cpu = (() => {
 
     function getRandomInt(max) {
         return Math.floor(Math.random() * max);
-    }      
+    }
+
     let previousShot = {x:-1, y:-1};
+    let centerSquare = {x:-1, y:-1};
 
     //The axis that the computer is currently searching
     let targetAxis = "x";
@@ -37,10 +39,11 @@ const Cpu = (() => {
             targetY = (targetY + 1)%10;
             targetShot = playerBoard.getSquare(targetX, targetY);
         }
-        previousShot = {targetX, targetY};
+        previousShot = {x: targetX, y: targetY};
         switch(targetShot) {
             case(1): //Shot Hit
                 playerBoard.setSquare(targetX, targetY, 3);
+                centerSquare = {x: targetX, y: targetY};
                 changeState(1);
                 return(true);
             case(0): //Shot Miss
@@ -53,49 +56,49 @@ const Cpu = (() => {
 
     const checkAdjacent = () => {
         const playerBoard = Boards.getPlayerBoard();
-        let targetShot = 0;
+        let targetShot = -1;
         let dir = 0;
         let targetX, targetY;
         // Cycle through adjacent squares until finds one that hasnt been tried
         while(targetShot !== 0 && targetShot !== 1) {
             switch(dir) {
                 case(0): // Up
-                    targetShot = playerBoard.getSquare(previousShot.x, previousShot.y+1);
-                    targetX = previousShot.x;
-                    targetY = previousShot.y+1;
+                    targetShot = playerBoard.getSquare(centerSquare.x, centerSquare.y+1);
+                    targetX = centerSquare.x;
+                    targetY = centerSquare.y+1;
                     break;
                 case(1): // Left
-                    targetShot = playerBoard.getSquare(previousShot.x+1, previousShot.y);
-                    targetX = previousShot.x+1;
-                    targetY = previousShot.y;
+                    targetShot = playerBoard.getSquare(centerSquare.x+1, centerSquare.y);
+                    targetX = centerSquare.x+1;
+                    targetY = centerSquare.y;
                     break;
                 case(2): // Down
-                    targetShot = playerBoard.getSquare(previousShot.x, previousShot.y-1);
-                    targetX = previousShot.x;
-                    targetY = previousShot.y-1;
+                    targetShot = playerBoard.getSquare(centerSquare.x, centerSquare.y-1);
+                    targetX = centerSquare.x;
+                    targetY = centerSquare.y-1;
                     break;
                 case(3): // Right
-                    targetShot = playerBoard.getSquare(previousShot.x-1, previousShot.y);
-                    targetX = previousShot.x-1;
-                    targetY = previousShot.y;
+                    targetShot = playerBoard.getSquare(centerSquare.x-1, centerSquare.y);
+                    targetX = centerSquare.x-1;
+                    targetY = centerSquare.y;
                     break;
                 case(4): // All Adjacent Squares have been guessed, shoot random
                     changeState(0);
+                    centerSquare = {x: -1, y: -1};
                     return(randomShooting());
                 default:
                     console.log(`Error: ${adjacentDir} is not a valid direction`);
             }
+            dir += 1;
         }
-        dir += 1;
         // Determine direction we need to look in
-        if(targetX===previousShot.x) {
-            targetAxis = "x";
-        } else {
+        if(targetX===centerSquare.x) {
             targetAxis = "y";
+        } else {
+            targetAxis = "x";
         }
         // Actually shoots the shot
-        previousShot = {targetX, targetY};
-        console.log(`targetX: ${targetX} | targetY: ${targetY}`);
+        previousShot = {x: targetX, y: targetY};
         switch(targetShot) {
             case(1): //Shot Hit
                 playerBoard.setSquare(targetX, targetY, 3);
@@ -116,12 +119,12 @@ const Cpu = (() => {
         let targetShot = playerBoard.getSquare(targetX, targetY);
         if(targetShot === 1) {
             playerBoard.setSquare(targetX, targetY, 3);
-            previousShot = {targetX, targetY};
+            previousShot = {x: targetX, y: targetY};
             return(true);
         }
         if(targetShot === 0) {
             playerBoard.setSquare(targetX, targetY, 2);
-            previousShot = {targetX, targetY};
+            previousShot = {x: targetX, y: targetY};
             changeState(0);
             return(false);
         }
@@ -130,21 +133,23 @@ const Cpu = (() => {
     }
 
     const checkPositive = () => {
+        console.log(targetAxis);
         const playerBoard = Boards.getPlayerBoard();
         let targetX = (targetAxis === "x") ? previousShot.x+1 : previousShot.x;
         let targetY = (targetAxis === "x") ? previousShot.y : previousShot.y+1;
         let targetShot = playerBoard.getSquare(targetX, targetY);
         if(targetShot === 1) {
             playerBoard.setSquare(targetX, targetY, 3);
-            previousShot = {targetX, targetY};
+            previousShot = {x: targetX, y: targetY};
             return(true);
         }
         if(targetShot === 0) {
             playerBoard.setSquare(targetX, targetY, 2);
-            previousShot = {targetX, targetY};
+            previousShot = {x: centerSquare.x, y: centerSquare.y};
             changeState(3);
             return(false);
         }
+        previousShot = {x: centerSquare.x, y: centerSquare.y};
         changeState(3);
         return(checkNegative());
     }
