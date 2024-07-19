@@ -371,7 +371,7 @@ const Pages = (() => {
         const playBtn = document.createElement("button");
         playBtn.id = "play-btn";
         playBtn.classList.add("chalk-border");
-        playBtn.innerText = "Play Game";
+        playBtn.innerText = "Play";
         playBtn.disabled = true;
         playBtn.addEventListener("click", () => {
             Game.changeState('MoveToGame');
@@ -403,6 +403,10 @@ const Pages = (() => {
         const upperShipRow = document.createElement("div");
         upperShipRow.classList.add("ship-row");
         setupMenu.appendChild(upperShipRow);
+
+        const middleShipRow = document.createElement("div");
+        middleShipRow.classList.add("ship-row");
+        setupMenu.appendChild(middleShipRow);
 
         const lowerShipRow = document.createElement("div");
         lowerShipRow.classList.add("ship-row");
@@ -449,7 +453,7 @@ const Pages = (() => {
                         icon.src = ShipIcon;
                         shipIconBox.appendChild(icon);
                     }
-                    upperShipRow.appendChild(shipBox);
+                    middleShipRow.appendChild(shipBox);
                     break;
                 case 3:
                     shipBox.classList.add("four-ship");
@@ -462,9 +466,13 @@ const Pages = (() => {
                         icon.src = ShipIcon;
                         shipIconBox.appendChild(icon);
                     }
-                    lowerShipRow.appendChild(shipBox);
+                    upperShipRow.appendChild(shipBox);
                     break;
                 case 4:
+                    let spaceShip = document.createElement('div');
+                    spaceShip.classList.add("space-ship");
+                    lowerShipRow.appendChild(spaceShip);
+
                     shipBox.classList.add("five-ship");
                     shipIconBox = document.createElement("div");
                     shipIconBox.classList.add("ship-icon-box");
@@ -476,6 +484,9 @@ const Pages = (() => {
                         shipIconBox.appendChild(icon);
                     }
                     lowerShipRow.appendChild(shipBox);
+                    let spaceShip2 = document.createElement('div');
+                    spaceShip2.classList.add("space-ship");
+                    lowerShipRow.appendChild(spaceShip2);
                     break;
                 default:
                     console.log("Error in switch statement");

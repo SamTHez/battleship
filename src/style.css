@@ -78,9 +78,9 @@ body {
 #content {
     height: 100vh;
     width: 100vw;
-
+    max-width: 120rem;
     padding: 2%;
-
+    margin: 0 auto;
 
     font-family: "Chalktastic", Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
     font-weight: normal;
@@ -105,7 +105,7 @@ body {
     padding: 1rem 3rem;
     font-size: 3rem;
     font-family: "Chalktastic", Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
-    color: #ffffff;
+    color: #ffffff
 }
 
 .chalk-border {
@@ -148,34 +148,48 @@ body {
     aspect-ratio: 1/1;
     grid-auto-rows: 1fr;
     grid-template-columns: minmax(0, 100%);
-    /* padding: 2% 0 5rem; */
-
+    padding: 1rem;
 }
 
 .ship-row {
     display: flex;
-    height: 10rem;
+    min-height: 0;
+    align-items: center;
 }
 
 .two-ship {
-    flex: 2;
-}
-
-.three-ship {
-    flex: 3;
-}
-
-.four-ship {
+    min-width: 0;
+    aspect-ratio: 2/1;
     flex: 4;
 }
 
+.three-ship {
+    min-width: 0;
+    aspect-ratio: 3/1;
+    flex: 6;
+}
+
+.four-ship {
+    min-width: 0;
+    aspect-ratio: 4/1;
+    flex: 8;
+}
+
 .five-ship {
-    flex: 5;
+    min-width: 0;
+    aspect-ratio: 5/1;
+    flex: 10;
+}
+
+.space-ship { 
+    flex: 1;
 }
 
 #setup-btns {
     display: flex;
-    padding: 2rem 0;
+    min-height: 0;
+    justify-content: space-between;
+    align-items: center;
 }
 
 #setup-btns button {
@@ -183,9 +197,9 @@ body {
 }
 
 .setup-btn {
-    flex: 1;
     aspect-ratio: 1/1;
     scale: .8;
+    padding: 1.4rem;
 }
 
 .setup-btn:hover {
@@ -199,14 +213,15 @@ body {
 
 .setup-icon {
     max-height: 5rem;
+    scale: 0.85;
 }
 
 #play-btn {
-    flex: 6;
-    margin: 0 2rem;
-    font-size: 3rem;
+    font-size: 2.4rem;
     font-family: "Chalktastic", Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
     color: #ffffff;
+    padding: 2rem;
+    aspect-ratio: 5/1;
 }
 
 #play-btn:hover:enabled {
@@ -225,8 +240,7 @@ button:disabled{
 .game-board {
     width: 100%;
     aspect-ratio: 1/1;
-    /* margin: 2rem 5rem;
-    padding: 1rem; */
+    padding: 1.5rem;
 
     display: grid;
     grid-template-columns: repeat(10, 1fr);
@@ -238,12 +252,11 @@ button:disabled{
     border: 1px solid #ffffff33;
 }
 
-.ship-box {
-    margin: 1rem;
-    padding: 2rem;
-    width: 20rem;
+.ship-box { 
     text-align: center;
     opacity: .8;
+    border-image-width: 10px;
+    margin: 0 1rem;
 }
 
 .ship-box:hover:not(.ship-selected) {
@@ -253,7 +266,6 @@ button:disabled{
 .ship-icon-box {
     display: flex;
     justify-content: space-evenly;
-    height: 100%;
 }
 
 @keyframes wiggle {
@@ -276,6 +288,8 @@ button:disabled{
 
 .ship-icon {
     flex: 1;
+    aspect-ratio: 1/1;
+    min-width: 0;
 }
 
 .ship-selected {
