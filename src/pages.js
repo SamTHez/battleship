@@ -218,16 +218,16 @@ const Pages = (() => {
         activeBoard.id = "active-board";
         activeBoard.classList.add("chalk-border");
         boardsDisplay.appendChild(activeBoard);
-
-        const cpuBoardLabel = document.createElement("h3");
-        cpuBoardLabel.innerText = "CPU Board";
-        cpuBoardLabel.classList.add("board-label");
-        boardsDisplay.appendChild(cpuBoardLabel);
     
         const playerBoardSide = document.createElement("div");
         playerBoardSide.classList.add("side-board", "chalk-border");
         boardsDisplay.appendChild(playerBoardSide);
         displayPlayerBoard(playerBoardSide);
+
+        const cpuBoardLabel = document.createElement("h3");
+        cpuBoardLabel.innerText = "CPU Board";
+        cpuBoardLabel.classList.add("board-label");
+        boardsDisplay.appendChild(cpuBoardLabel);
 
         const cpuBoardSide = document.createElement("div");
         cpuBoardSide.classList.add("side-board", "chalk-border");
