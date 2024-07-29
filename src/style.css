@@ -189,7 +189,8 @@ body {
     display: flex;
     min-height: 0;
     justify-content: space-between;
-    align-items: center;
+    margin: 0 1rem;
+    padding: 2% 0;
 }
 
 #setup-btns button {
@@ -197,9 +198,9 @@ body {
 }
 
 .setup-btn {
-    aspect-ratio: 1/1;
+    border-image-width: 10px;
+    flex: 1;
     scale: .8;
-    padding: 1.4rem;
 }
 
 .setup-btn:hover {
@@ -212,16 +213,19 @@ body {
 }
 
 .setup-icon {
-    max-height: 5rem;
-    scale: 0.85;
+    max-height: 100%;
+    max-width: 100%;
+    min-height: 0;
+    min-width: 0;
 }
 
 #play-btn {
     font-size: 2.4rem;
+    font-size:clamp(2.4rem, 4vw, 4.8rem);
     font-family: "Chalktastic", Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
     color: #ffffff;
-    padding: 2rem;
-    aspect-ratio: 5/1;
+    border-image-width: 10px;
+    flex: 3
 }
 
 #play-btn:hover:enabled {
