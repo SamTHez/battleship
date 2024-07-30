@@ -124,7 +124,6 @@ const Pages = (() => {
         endText.innerText = (playerWin) ? "You Won! Play Again?" : "You Lost! Play Again?";
         root.appendChild(endText);
 
-        //Add 2 portraits side by side
         const charContainer = document.createElement("div");
         charContainer.id = "char-container";
         root.appendChild(charContainer);
@@ -158,51 +157,32 @@ const Pages = (() => {
         const nextBtn = document.createElement("button");
         nextBtn.id = "nextBtn";
         nextBtn.classList.add("chalk-border");
-        nextBtn.textContent = "Continue";
-        nextBtn.addEventListener("click",() => {
-            switch(Game.getState()) {
-                case "player_turn":
-                    const selectedSquare = document.querySelector("#active-board .square-selected");
-                    if(selectedSquare) {
-                        let selectedX = toInteger(selectedSquare.id.split("-")[1]);
-                        let selectedY = toInteger(selectedSquare.id.split("-")[2]);
-                        let result = startPlayerTurn(selectedX, selectedY);
-                        if(result) {
-                            if(Boards.getDisplayBoard().checkForWin()) {
-                                Game.changeState("GameEnd");
-                            } else {
-                                unloadPage(root);
-                                loadGamePage(root, "You Hit A Ship! Shoot Again");
-                                displayCpuBoard();
-                                setupSquareSelect();
-                            }
-                        } else {
-                            Game.setNewMsg("You Missed! CPU Turn To Shoot");
-                            Game.changeState("PlayerMiss");
-                        }
-                    }
-                    break;
-                case "cpu_turn":
-                    let result = Cpu.takeTurn();
+        nextBtn.textContent = "Shoot";
+        if(Game.getState() === 'cpu_turn') {
+            nextBtn.style.opacity = 0;
+        } else {
+        nextBtn.addEventListener("click", () => {
+            const selectedSquare = document.querySelector("#active-board .square-selected");
+                if(selectedSquare) {
+                    let selectedX = toInteger(selectedSquare.id.split("-")[1]);
+                    let selectedY = toInteger(selectedSquare.id.split("-")[2]);
+                    let result = startPlayerTurn(selectedX, selectedY);
                     if(result) {
-                        if(Boards.getPlayerBoard().checkForWin()) {
+                        if(Boards.getDisplayBoard().checkForWin()) {
                             Game.changeState("GameEnd");
                         } else {
                             unloadPage(root);
-                            loadGamePage(root, "CPU Hit! CPU Will Shoot Again");
-                            displayPlayerBoard();
+                            loadGamePage(root, "You Hit A Ship! Shoot Again");
+                            displayCpuBoard();
+                            setupSquareSelect();
                         }
                     } else {
-                        Game.setNewMsg("CPU Missed! Your Turn To Shoot");
-                        Game.changeState("CpuMiss");
+                        Game.setNewMsg("You Missed! CPU Turn To Shoot");
+                        Game.changeState("PlayerMiss");
                     }
-                    break;
-                default:
-                    console.log("Error in NextBtn")
-
-            }
-            
-        })
+                }
+            })
+        }
         root.appendChild(nextBtn);
 
         const boardsDisplay = document.createElement("div");

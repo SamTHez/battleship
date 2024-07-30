@@ -1,9 +1,11 @@
 import Pages from './pages';
 import Boards from './boards';
+import Cpu from './cpu';
 
 const Game = (() => {
     const content = document.getElementById("content");
     let gameMsg = "";
+    let playerWin = true;
 
     const setNewMsg = (text) => {
         gameMsg = text;
@@ -45,9 +47,34 @@ const Game = (() => {
         },
         CPU_TURN: {
             name: 'cpu_turn',
-            onEnter: () => {
+            onEnter: async () => {
                 Pages.loadGamePage(content, gameMsg);
                 Pages.displayPlayerBoard();
+                let result =  await Cpu.takeTurn();
+                const playerBoard = Boards.getPlayerBoard();
+                if(result){
+                    if(playerBoard.checkForWin()) {
+                        playerWin = false;
+                        changeState("GameEnd");
+                        result = false;
+                    }
+                }
+                while(result) {
+                    setNewMsg("CPU Hits Your Ship!");
+                    Pages.unloadPage(content);
+                    Pages.loadGamePage(content, gameMsg);
+                    Pages.displayPlayerBoard();
+                    result = await Cpu.takeTurn();
+                    if(result){
+                        if(playerBoard.checkForWin()) {
+                            playerWin = false;
+                            changeState("GameEnd");
+                            result = false;
+                        }
+                    }
+                }
+                setNewMsg("CPU Missed, Take Your Shot");
+                changeState("CpuMiss");
             },
             onExit: () => {
                 Pages.clearActiveBoard();
@@ -57,7 +84,7 @@ const Game = (() => {
         GAME_END: {
             name: 'game_end',
             onEnter: () => {
-                Pages.loadEndPage(content, false); //Fix 2nd Argument to reflect who won
+                Pages.loadEndPage(content, playerWin);
             },
             onExit: () => {
                 Pages.unloadPage(content);
@@ -90,10 +117,10 @@ const Game = (() => {
     let curState = gameStates.START.name;
 
     const changeState = (event) => {
-        const nextState = transitions[event][curState];        
+        const nextState = transitions[event][curState];       
 
         if(!nextState) {
-            console.log('Invalid state transition or event');
+            console.trace('Invalid state transition or event');
             return(null);
         }
 

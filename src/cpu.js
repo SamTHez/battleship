@@ -1,4 +1,5 @@
 import Boards from './boards';
+import Game from './game';
 
 const Cpu = (() => {
     //Shoot randomly until you get a hit
@@ -35,8 +36,8 @@ const Cpu = (() => {
         let targetY = getRandomInt(10);
         let targetShot = playerBoard.getSquare(targetX, targetY);
         while(targetShot !== 0 && targetShot !== 1) {
-            targetX = (targetX + 1)%10;
-            targetY = (targetY + 1)%10;
+            targetX = getRandomInt(10);
+            targetY = getRandomInt(10);
             targetShot = playerBoard.getSquare(targetX, targetY);
         }
         previousShot = {x: targetX, y: targetY};
@@ -112,28 +113,34 @@ const Cpu = (() => {
         }
     }
 
+    // Needs to keep checking if targetShot === 3 and stop if targetShot === 2
     const checkNegative = () => {
         const playerBoard = Boards.getPlayerBoard();
         let targetX = (targetAxis === "x") ? previousShot.x-1 : previousShot.x;
         let targetY = (targetAxis === "x") ? previousShot.y : previousShot.y-1;
         let targetShot = playerBoard.getSquare(targetX, targetY);
-        if(targetShot === 1) {
-            playerBoard.setSquare(targetX, targetY, 3);
-            previousShot = {x: targetX, y: targetY};
-            return(true);
+        switch(targetShot) {
+            case 0:
+                playerBoard.setSquare(targetX, targetY, 2);
+                previousShot = {x: targetX, y: targetY};
+                changeState(0);
+                return(false);
+            case 1:
+                playerBoard.setSquare(targetX, targetY, 3);
+                previousShot = {x: targetX, y: targetY};
+                return(true);
+            case 2:
+                changeState(0);
+                return(randomShooting());
+            case 3:
+                previousShot = {x: targetX, y: targetY};
+                return(checkNegative());
+            default:
+                console.log("Error in CPU checkNegative function");
         }
-        if(targetShot === 0) {
-            playerBoard.setSquare(targetX, targetY, 2);
-            previousShot = {x: targetX, y: targetY};
-            changeState(0);
-            return(false);
-        }
-        changeState(0);
-        return(randomShooting());
     }
 
     const checkPositive = () => {
-        console.log(targetAxis);
         const playerBoard = Boards.getPlayerBoard();
         let targetX = (targetAxis === "x") ? previousShot.x+1 : previousShot.x;
         let targetY = (targetAxis === "x") ? previousShot.y : previousShot.y+1;
@@ -154,9 +161,22 @@ const Cpu = (() => {
         return(checkNegative());
     }
 
+    const sleep = (ms) => {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
     //Needs to return true if shot hit, false if not
-    const takeTurn = () => {
-        console.log(turnState);
+    const takeTurn = async () => {
+        const gameText = document.querySelector(".game-text");
+        await sleep(400);
+        gameText.innerText = "CPU Thinking";
+        await sleep(200);
+        gameText.innerText += " .";
+        await sleep(200);
+        gameText.innerText += " .";
+        await sleep(200);
+        gameText.innerText += " .";
+        await sleep(400);
         switch(turnState) {
             case(0):
                 return(randomShooting());

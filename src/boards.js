@@ -121,7 +121,7 @@ const Boards = (() => {
                         }
                     }
                 }
-                if(hitCount === 17) {
+                if(hitCount >= 17) {
                     return(true);
                 } else {
                     return(false);
