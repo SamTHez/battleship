@@ -61,7 +61,7 @@ const Boards = (() => {
             board: boardState,
             //Board Key: -1:error, 0:empty, 1:ship, 2:shotMiss, 3:shotHit
             getSquare: function(x,y) {
-                if(x>=BOARD_SIZE||y>=BOARD_SIZE) {
+                if(x>=BOARD_SIZE||y>=BOARD_SIZE||x<0||y<0) {
                     return(-1);
                 }
                 return(this.board[y][x]);

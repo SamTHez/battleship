@@ -62,6 +62,7 @@ const Cpu = (() => {
         let targetX, targetY;
         // Cycle through adjacent squares until finds one that hasnt been tried
         while(targetShot !== 0 && targetShot !== 1) {
+            console.log(targetShot);
             switch(dir) {
                 case(0): // Up
                     targetShot = playerBoard.getSquare(centerSquare.x, centerSquare.y+1);
@@ -133,6 +134,7 @@ const Cpu = (() => {
                 changeState(0);
                 return(randomShooting());
             case 3:
+            case -1:
                 previousShot = {x: targetX, y: targetY};
                 return(checkNegative());
             default:
